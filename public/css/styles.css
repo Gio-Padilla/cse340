@@ -281,3 +281,8 @@ footer {
 #inv-display li div a:hover {
 	text-decoration: underline;
 }
+
+/* --------------------------- error-message --------------------------- */
+#error-message {
+	margin: 1rem;
+}
