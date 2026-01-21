@@ -13,7 +13,7 @@
     --secondary-color: #632b15;
     --accent-color: #e7e7f0;
     --second-accent-color: #f5e9c2;
-	--max-width: 750px;
+	--max-width: 1000px;
 }
 
 h1, h2, h3, h4, h5, .site-name {
@@ -26,6 +26,10 @@ body {
   background-image: url('/images/site/small_check.jpg');
   background-repeat: repeat;
   padding: 1rem 0;
+}
+
+body h1 {
+	padding: 1rem;
 }
 
 @media screen and (max-width: 750px) {
@@ -94,7 +98,7 @@ body {
 
 /* --------------------------- Nav CSS --------------------------- */
 
-#main-menu {
+#wrapper nav ul {
 	display: flex;
 	flex-direction: row;
 	align-content: stretch;
@@ -105,11 +109,11 @@ body {
 }
 
 /* Stretches the items in the flex */
-#main-menu li {
+#wrapper nav li {
 	flex: 1;
 }
 
-#main-menu a {
+#wrapper nav a {
 	display: block;
 	padding: 1rem;
 	text-decoration: none;
@@ -118,7 +122,7 @@ body {
 	text-align: center;
 }
 
-#main-menu a:hover {
+#wrapper nav a:hover {
 	display: block;
 	padding: 1rem;
 	text-decoration: none;
@@ -235,4 +239,45 @@ body {
 /* --------------------------- Footer CSS --------------------------- */
 footer {
 	padding: 1.5rem 0.5rem 0.5rem 0.5rem;
+}
+
+/* --------------------------- inv-display --------------------------- */
+#inv-display {
+	display: grid;
+	gap: 1rem;
+    margin: 0.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
+	justify-content: space-evenly;
+	text-align: center;
+}
+
+#inv-display img {
+	width: 100%;
+	height: auto;
+	max-width: 400px;
+}
+
+#inv-display li {
+	overflow: hidden;
+	border-radius: 1rem;
+	background-color: var(--second-accent-color);
+	border: 3px solid var(--secondary-color);
+	box-shadow: 0 0 1rem var(--secondary-color);
+}
+
+#inv-display li div {
+	padding: 1rem;
+}
+
+#inv-display li div {
+	padding: 1rem;
+}
+
+#inv-display li div a {
+	text-decoration: none;
+	color: var(--primary-color);
+}
+
+#inv-display li div a:hover {
+	text-decoration: underline;
 }
