@@ -19,4 +19,22 @@ invCont.buildByClassificationId = async function (req, res, next) {
   })
 }
 
+/* ***************************
+ *  Build Listing by ID view
+ * ************************** */
+invCont.buildByItemID = async function (req, res, next) {
+  const itemID = req.params.itemId  // matches :itemId in the route
+  const data = await invModel.getInventoryByInvId(itemID)
+  const item = data[0]
+  const listing = await utilities.buildListingHTML(itemID)
+  const nav = await utilities.getNav()
+  const title = `${item.inv_year} ${item.inv_make} ${item.inv_model}`
+  res.render("./inventory/listing", {
+    title,
+    nav,
+    listing,
+  })
+}
+
+
 module.exports = invCont

@@ -286,3 +286,29 @@ footer {
 #error-message {
 	margin: 1rem;
 }
+
+/* --------------------------- error-message --------------------------- */
+.listing-page {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+.listing-page img {
+	width: 100%;
+	height: auto;
+	padding: 1rem;
+}
+
+.listing-page h2, .listing-page p {
+	padding: 0.5rem;
+}
+
+.listing-page p {
+	padding-left: 1rem;
+}
+
+@media screen and (max-width: 650px) {
+    .listing-page {
+		grid-template-columns: 1fr;
+	}
+}

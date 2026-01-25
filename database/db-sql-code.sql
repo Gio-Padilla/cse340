@@ -103,7 +103,7 @@ VALUES   (
     'Brown',
     1
   ), (
-    'Dog ',
+    'Dog',
     'Car',
     '1997',
     'Do you like dogs? Well this car is for you straight from the 90s from Aspen, Colorado we have the orginal Dog Car complete with fluffy ears.',

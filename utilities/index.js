@@ -6,7 +6,7 @@ const Util = {}
  ************************** */
 Util.getNav = async function (req, res, next) {
   let data = await invModel.getClassifications()
-  console.log(data)
+  // console.log(data) // Displays the data that was returned.
   let list = "<ul>"
   list += '<li><a href="/" title="Home page">Home</a></li>'
   data.rows.forEach((row) => {
@@ -56,6 +56,31 @@ Util.buildClassificationGrid = async function(data){
     grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
   }
   return grid
+}
+
+/* **************************************
+* Build Listing View HTML
+* ************************************ */
+Util.buildListingHTML = async function(itemID) {
+  let theData = await invModel.getInventoryByInvId(itemID)
+  theData = theData[0]
+  theData.inv_price = Number(theData.inv_price).toLocaleString()
+  theData.inv_miles = Number(theData.inv_miles).toLocaleString()
+  // console.log(theData) // Testing to see how the data gets returned
+  let theHTML = `
+    <div class="listing-page">
+      <img src="${theData.inv_image}" alt="${theData.inv_year} ${theData.inv_make} ${theData.inv_model}">
+      <div>
+        <h2>${theData.inv_make} ${theData.inv_model} Details</h2>
+        <p><b>Price: </b>$${theData.inv_price}</p>
+        <p><b>Description: </b>${theData.inv_description}</p>
+        <p><b>Color: </b>${theData.inv_color}</p>
+        <p><b>Miles: </b>${theData.inv_miles}</p>
+      </div>
+    </div>
+  `
+  // console.log(theHTML) // Testing to see if the HTML looks good
+  return theHTML
 }
 
 /* ****************************************
