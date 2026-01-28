@@ -1,0 +1,33 @@
+<% if (title) { %>
+<h1><%= title %></h1>
+<% } else {
+  res.redirect('/')
+} %>
+
+<%- messages() %>
+
+<% if (errors) { %>
+  <ul class="notice">
+ <% errors.array().forEach(error => { %>
+   <li><%= error.msg %></li>
+<%  }) %>
+ </ul>
+<% } %>
+
+<div class="my-form">
+	<form id="login" method="POST" action="/account/register">
+        <div><label>First Name:<br><input type="text" name="account_firstname" required /></label></div>
+        <div><label>Last Name:<br><input type="text" name="account_lastname" required /></label></div>
+		<div><label>Email:<br><input type="email" name="account_email" required /></label></div>
+		<div><label>Password: <br><input type="password" name="account_password" required aria-describedby="password-rules" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
+/></label></div>
+        <div>Password Requirements</div>
+        <ul id="password-rules" class="password-hint" >
+            <li>At least 12 characters</li>
+            <li>At least 1 capital letter</li>
+            <li>At least 1 number</li>
+            <li>At least 1 special character</li>
+        </ul>
+		<button type="submit">Register</button>
+	</form>
+</div>

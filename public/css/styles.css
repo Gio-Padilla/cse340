@@ -312,3 +312,88 @@ footer {
 		grid-template-columns: 1fr;
 	}
 }
+
+/* --------------------------- messages and notices --------------------------- */
+#messages ul, .notice {
+	list-style-type: disc;
+	list-style-position: inside;
+	padding: 1rem;
+	color: red;
+	font-weight: bold;
+	font-style: italic;
+}
+
+/* --------------------------- Login/Register Form --------------------------- */
+.my-form {
+	text-align: center;
+}
+.my-form form {
+	background-color: var(--secondary-color);
+	color: white;
+	display: inline-block;
+	padding: 1rem;
+	margin: 0 auto;
+	border-radius: 1rem;
+	text-align: left;
+	width: 50%;
+}
+
+.my-form input {
+	width: 100%;
+	padding: 0.5rem;
+	border-radius: 0.5rem;
+	color: black;
+}
+
+.my-form input:valid {
+	border-left: 6px solid green;
+}
+
+.my-form input:invalid {
+	border-left: 6px solid red;
+}
+
+.my-form div {
+	margin-top: 0.5rem;
+}
+
+.my-form button {
+	padding: 0.5rem 2rem;
+	background-color: var(--second-accent-color);
+	border-radius: 1px solid var(--primary-color);
+	text-align: center;
+	border-radius: 1rem;
+	cursor: pointer;
+	margin: 0.25rem auto;
+	display: block;
+}
+.my-form button:hover {
+	background-color: var(--accent-color);
+}
+
+.my-form p {
+	text-align: center;
+}
+
+.my-form p a {
+	text-decoration: underline;
+	cursor: pointer;
+	color: white;
+}
+
+.my-form .password-hint {
+	list-style-position: inside;
+	padding: 0.5rem 0;
+}
+
+@media screen and (max-width: 800px) {
+    .my-form form {
+		width: 75%;
+	}
+}
+
+@media screen and (max-width: 500px) {
+    .my-form form {
+		width: 100%;
+	}
+}
