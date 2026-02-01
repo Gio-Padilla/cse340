@@ -6,7 +6,7 @@
 <%- messages() %>
 
 <div class="my-form">
-	<form id="login" method="POST" action="/account/details">
+	<form id="loginForm" method="POST" action="/account/login">
 		<div><label>Email:<br><input type="email" name="account_email" required /></label></div>
 		<div><label>Password: <br><input type="password" name="account_password" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" /></label></div>
 		<div>Password Requirement Reminder</div>

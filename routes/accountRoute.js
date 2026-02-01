@@ -23,4 +23,12 @@ router.post(
 // Double check "The Login View Route" step #5
 // I added this part in the server.js file
 
+// Process the login attempt
+router.post(
+  "/login",
+  (req, res) => {
+    res.status(200).send('login process')
+  }
+)
+
 module.exports = router;

@@ -67,6 +67,9 @@ app.use("/account", utilities.handleErrors(accountRoute))
 // Trigger 500 error route
 app.get("/trigger500", errorController.throw500)
 
+// Just a filler line in order to get rid of a message I keep getting on the server.
+app.use('/.well-known', express.static('public/.well-known'));
+
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
   next({status: 404, message: 'Sorry, we appear to have lost that page.'})

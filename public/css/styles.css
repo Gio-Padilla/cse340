@@ -282,8 +282,8 @@ footer {
 	text-decoration: underline;
 }
 
-/* --------------------------- error-message --------------------------- */
-#error-message {
+/* --------------------------- error-message, link-options --------------------------- */
+#error-message, .link-options {
 	margin: 1rem;
 }
 
@@ -314,7 +314,7 @@ footer {
 }
 
 /* --------------------------- messages and notices --------------------------- */
-#messages ul, .notice {
+#messages ul, .notice, .form-errors {
 	list-style-type: disc;
 	list-style-position: inside;
 	padding: 1rem;
@@ -323,7 +323,7 @@ footer {
 	font-style: italic;
 }
 
-/* --------------------------- Login/Register Form --------------------------- */
+/* --------------------------- All Forms --------------------------- */
 .my-form {
 	text-align: center;
 }
@@ -338,19 +338,23 @@ footer {
 	width: 50%;
 }
 
-.my-form input {
+.my-form input, .my-form textarea, .my-form select {
 	width: 100%;
+	max-width: 100%;
+	min-width: 100%;
 	padding: 0.5rem;
 	border-radius: 0.5rem;
 	color: black;
 }
 
-.my-form input:valid {
+.my-form input:valid, .my-form textarea:valid, .my-form select:valid {
 	border-left: 6px solid green;
+	background-color: rgb(243, 255, 243);
 }
 
-.my-form input:invalid {
+.my-form input:invalid, .my-form textarea:invalid, .my-form select:invalid {
 	border-left: 6px solid red;
+	background-color: rgb(255, 237, 237);
 }
 
 .my-form div {
