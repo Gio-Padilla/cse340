@@ -364,7 +364,7 @@ footer {
 .my-form button {
 	padding: 0.5rem 2rem;
 	background-color: var(--second-accent-color);
-	border-radius: 1px solid var(--primary-color);
+	border: 1px solid var(--primary-color);
 	text-align: center;
 	border-radius: 1rem;
 	cursor: pointer;

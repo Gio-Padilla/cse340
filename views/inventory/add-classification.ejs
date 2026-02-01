@@ -17,9 +17,15 @@
 <div class="my-form">
 	<form method="POST" action="/inv/add-classification">
 		<div>
-            <p>Field Is Required</p>
-        </div>
-		<div><label>Classification Name<br>Name must be alphabetical characters only.<br><input type="text" name="classification_name" required pattern="^[A-Za-z]+$"/></label></div>
+      <p>Field Is Required</p>
+    </div>
+		<div>
+      <label>
+        Classification Name<br>
+        Name must be alphabetical characters only.<br>
+        <input type="text" name="classification_name" required pattern="^[A-Za-z]+$">
+      </label>
+    </div>
 		<button type="submit">Add Classification</button>
 	</form>
 </div>
