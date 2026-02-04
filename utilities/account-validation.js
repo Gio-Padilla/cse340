@@ -105,4 +105,25 @@ validate.checkRegData = async (req, res, next) => {
   next()
 }
 
+/* ******************************
+ * Check data and return errors or continue to account
+ * ***************************** */
+validate.checkLoginData = async (req, res, next) => {
+  const { account_email } = req.body
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    res.render("account/login", {
+      errors,
+      title: "Login",
+      nav,
+      account_email,
+    })
+    return
+  }
+  next()
+}
+
+
 module.exports = validate

@@ -10,7 +10,7 @@
 <% } %>
 
 <div class="my-form">
-	<form method="POST" action="/inv/add-inventory">
+	<form id="updateForm" method="POST" action="/inv/edit/<%= inv_id %>">
         <div>All Fields are required.</div>
         <div>
             <label>Classification:<br>
@@ -62,6 +62,10 @@
             <input type="text" name="inv_color" required value="<%- inv_color %>" minlength="2">
             </label>
         </div> 
-		<button type="submit">Add Vehicle</button>
+		<button type="submit" disabled>Update Vehicle</button>
+        <input type="hidden" name="inv_id"
+        <% if(locals.inv_id) { %> value="<%= locals.inv_id %>"
+        <% } %>>
 	</form>
 </div>
+<script src="../../js/edit-inventory.js"></script>

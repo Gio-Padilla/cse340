@@ -401,3 +401,70 @@ footer {
 		width: 100%;
 	}
 }
+
+/* --------------------------- manage-inventory-select Base --------------------------- */
+
+.manage-inventory-select {
+	margin: 0.5rem;
+}
+
+.manage-inventory-select h2 {
+	border-bottom: 4px solid var(--primary-color);
+	padding: 0 0.25rem;
+}
+
+.manage-inventory-select p {
+	padding: 0.25rem;
+}
+
+.manage-inventory-select select {
+	padding: 0.8rem;
+	background-color: var(--second-accent-color);
+	border-radius: 0.5rem;
+	border: 2px solid var(--primary-color);
+	cursor: pointer;
+	margin: 0.5rem;
+}
+
+/* --------------------------- manage-inventory-select Table --------------------------- */
+.manage-inventory-select table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  text-align: left;
+}
+
+.manage-inventory-select table thead {
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 0.5rem;
+  border-bottom: 2px solid #0000007e;
+}
+
+.manage-inventory-select table thead th {
+  padding: 0.5rem;
+}
+
+.manage-inventory-select table tbody tr:nth-child(even) {
+  background-color: #0000001c;
+}
+
+.manage-inventory-select table tbody tr:hover {
+  background-color: var(--second-accent-color); /* Highlight on hover */
+}
+
+.manage-inventory-select table td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #000000;
+}
+
+.manage-inventory-select table a {
+  color: var(--secondary-color);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.manage-inventory-select table a:hover {
+  text-decoration: underline;
+}

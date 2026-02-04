@@ -28,7 +28,7 @@ validate.classificationRules = () => {
 validate.vehicleRules = () => {
   return [
     // Classification (required)
-    body("inv_classification")
+    body("classification_id")
       .trim()
       .escape()
       .notEmpty()
@@ -139,7 +139,7 @@ validate.checkClassificationData = async (req, res, next) => {
  * ***************************** */
 validate.checkInventoryData = async (req, res, next) => {
   const {
-    inv_classification,
+    classification_id,
     inv_make,
     inv_model,
     inv_description,
@@ -157,15 +157,15 @@ validate.checkInventoryData = async (req, res, next) => {
     try {
       // Get navigation and classifications for the form
       const nav = await utilities.getNav();
-      const classificationsData = await inventoryModel.getClassifications();
+      const classificationsOptions = await utilities.buildClassificationList()
 
       res.render("inventory/add-inventory", {
         errors: errors.array(),
         title: "Add New Inventory",
         nav,
-        classifications: classificationsData.rows,  // Pass classifications for dropdown
+        classificationList: classificationsOptions,  // Pass classifications for dropdown
         // Re-populate all form fields
-        inv_classification,
+        classification_id,
         inv_make,
         inv_model,
         inv_description,
@@ -185,4 +185,60 @@ validate.checkInventoryData = async (req, res, next) => {
 
   next();
 };
+
+/* ******************************
+ * Check data and return errors for Edit Inventory or Continue
+ * ***************************** */
+validate.checkUpdateData = async (req, res, next) => {
+  const {
+    inv_id,
+    classification_id,
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color
+  } = req.body;
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    try {
+      // Get navigation and classifications for the form
+      const nav = await utilities.getNav();
+      const classificationsOptions = await utilities.buildClassificationList(classification_id)
+      const title = `Edit ${inv_make} ${inv_model}`;
+
+      res.render("inventory/edit-inventory", {
+        errors: errors.array(),
+        title,
+        nav,
+        classificationList: classificationsOptions,  // Pass classifications for dropdown
+        // Re-populate all form fields
+        inv_id,
+        classification_id,
+        inv_make,
+        inv_model,
+        inv_description,
+        inv_image,
+        inv_thumbnail,
+        inv_price,
+        inv_year,
+        inv_miles,
+        inv_color
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send("Server Error");
+    }
+    return;
+  }
+
+  next();
+};
+
 module.exports = validate

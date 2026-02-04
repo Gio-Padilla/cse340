@@ -22,6 +22,7 @@ async function checkExistingclassification(classificationName){
 
 /* ******************************************************************
  *   Add item to inventory 
+ *   Now uses classification_id directly instead of classification_name
  * ***************************************************************** */
 async function addInventory({
   inv_make,
@@ -33,23 +34,9 @@ async function addInventory({
   inv_price,
   inv_miles,
   inv_color,
-  classification_name
+  classification_id // <- now expects numeric ID directly
 }) {
   try {
-    // Get the classification ID from the name
-    const classResult = await pool.query(
-      "SELECT classification_id FROM classification WHERE classification_name = $1",
-      [classification_name]
-    );
-
-    // Throw an error if not found
-    if (classResult.rowCount === 0) {
-      throw new Error(`Classification '${classification_name}' not found`);
-    }
-
-    // Defines the classification ID
-    const classification_id = classResult.rows[0].classification_id;
-
     // Insert the new vehicle
     const sql = `
       INSERT INTO inventory (
@@ -71,7 +58,7 @@ async function addInventory({
       inv_price,
       inv_miles,
       inv_color,
-      classification_id
+      classification_id // <- use the ID directly
     ];
 
     const result = await pool.query(sql, values);
@@ -82,6 +69,7 @@ async function addInventory({
     return { error: error.message };
   }
 }
+
 
 /* ***********************************************************************
  *  Get all inventory items and classification_name by classification_id
@@ -135,5 +123,47 @@ async function addClassification(classification_name) {
   }
 }
 
+/* ***************************
+ *  Update Inventory Data
+ * ************************** */
+async function updateInventory(
+  inv_id,
+  inv_make,
+  inv_model,
+  inv_description,
+  inv_image,
+  inv_thumbnail,
+  inv_price,
+  inv_year,
+  inv_miles,
+  inv_color,
+  classification_id
+) {
+  try {
+    const sql =
+      `UPDATE public.inventory
+      SET inv_make = $1,inv_model = $2, inv_description = $3,
+      inv_image = $4, inv_thumbnail = $5, inv_price = $6,
+      inv_year = $7, inv_miles = $8, inv_color = $9,
+      classification_id = $10 WHERE inv_id = $11
+      RETURNING *`
+    const data = await pool.query(sql, [
+      inv_make,
+      inv_model,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_year,
+      inv_miles,
+      inv_color,
+      classification_id,
+      inv_id
+    ])
+    return data.rows[0]
+  } catch (error) {
+    console.error("model error: " + error)
+  }
+}
 
-module.exports = {getClassifications, getInventoryByClassificationId, getInventoryByInvId, checkExistingclassification, addInventory, addClassification}
+module.exports = {getClassifications, getInventoryByClassificationId, getInventoryByInvId, checkExistingclassification, addInventory, addClassification, updateInventory}

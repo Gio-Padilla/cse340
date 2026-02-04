@@ -21,7 +21,7 @@ router.post(
   "/add-classification",
   inventoryValidate.classificationRules(),
   inventoryValidate.checkClassificationData,
-  inventoryController.addClassification
+  utilities.handleErrors(inventoryController.addClassification)
 );
 
 // Route to Add Inventory
@@ -31,7 +31,21 @@ router.post(
   "/add-inventory",
   inventoryValidate.vehicleRules(),
   inventoryValidate.checkInventoryData,
-  inventoryController.addVehicle
+  utilities.handleErrors(inventoryController.addVehicle)
+);
+
+// Route to edit Class Table
+router.get("/getInventory/:classification_id", utilities.handleErrors(inventoryController.getInventoryJSON))
+
+// Route to build edit view
+router.get("/edit/:itemId", utilities.handleErrors(inventoryController.buildEditInventory))
+
+// Process the inventory edit request
+router.post(
+  "/edit/:itemId",
+  inventoryValidate.vehicleRules(),
+  inventoryValidate.checkUpdateData,
+  inventoryController.updateInventory
 );
 
 module.exports = router;

@@ -11,6 +11,14 @@ router.get("/login", accountController.buildLogin);
 // Route to build the creat account view
 router.get("/register", accountController.buildRegister);
 
+// Route to account view
+// router.get("/", accountController.buildAccountView);
+router.get(
+  "/",
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.buildAccountView)
+)
+
 // Process the registration data
 router.post(
   "/register",
@@ -23,12 +31,13 @@ router.post(
 // Double check "The Login View Route" step #5
 // I added this part in the server.js file
 
-// Process the login attempt
+// Process login
 router.post(
   "/login",
-  (req, res) => {
-    res.status(200).send('login process')
-  }
+  regValidate.loginRules(),
+  regValidate.checkLoginData,
+  utilities.handleErrors(accountController.accountLogin)
+  //(req, res) => {res.status(200).send('login process')}
 )
 
 module.exports = router;
