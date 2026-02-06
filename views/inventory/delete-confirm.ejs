@@ -1,0 +1,40 @@
+<h1><%= title %></h1>
+<%- messages() %>
+
+<% if (errors && errors.length > 0) { %>
+    <ul class="form-errors">
+        <% errors.forEach(err => { %>
+            <li><%= err.msg %></li>
+        <% }) %>
+    </ul>
+<% } %>
+
+<div class="my-form">
+	<form method="POST" action="/inv/delete/<%= inv_id %>">
+        <div>Confirm Deletion - The delete is permanent.</div>
+        <div>
+            <label>Make:<br>
+            <input type="text" name="inv_make" required value="<%= inv_make %>" minlength="3" placeholder="Min of 3 characters" readonly>
+            </label>
+        </div>
+		<div>
+            <label>Model:<br>
+            <input type="text" name="inv_model" required value="<%= inv_model %>" minlength="3" placeholder="Min of 3 characters" readonly>
+            </label>
+        </div>
+        <div>
+            <label>Price:<br>
+            <input type="number" name="inv_price" required value="<%= inv_price %>" step="0.01" min="0" placeholder="Decimal or Integer" readonly>
+            </label>
+        </div>
+        <div>
+            <label>Year:<br>
+            <input type="number" name="inv_year" required value="<%= inv_year %>" min="1000" max="9999" placeholder="4-digit year" readonly>
+            </label>
+        </div>
+		<button type="submit">Delete Vehicle</button>
+        <input type="hidden" name="inv_id"
+        <% if(locals.inv_id) { %> value="<%= locals.inv_id %>"
+        <% } %>>
+	</form>
+</div>
