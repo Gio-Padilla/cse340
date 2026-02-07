@@ -38,6 +38,14 @@ body h1 {
 	}
 }
 
+.pad1rem {
+	padding: 1rem;
+}
+
+.top1rem {
+	margin-top: 1rem;
+}
+
 /* --------------------------- Page CSS --------------------------- */
 
 #wrapper {

@@ -100,23 +100,23 @@ Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)
 * Middleware to check token validity
 **************************************** */
 Util.checkJWTToken = (req, res, next) => {
- if (req.cookies.jwt) {
-  jwt.verify(
-   req.cookies.jwt,
-   process.env.ACCESS_TOKEN_SECRET,
-   function (err, accountData) {
-    if (err) {
-     req.flash("Please log in")
-     res.clearCookie("jwt")
-     return res.redirect("/account/login")
-    }
-    res.locals.accountData = accountData
-    res.locals.loggedin = 1
+  res.locals.loggedin = 0
+
+  if (req.cookies.jwt) {
+    jwt.verify(
+      req.cookies.jwt,
+      process.env.ACCESS_TOKEN_SECRET,
+      function (err, accountData) {
+        if (!err) {
+          res.locals.accountData = accountData
+          res.locals.loggedin = 1
+        }
+        next()
+      }
+    )
+  } else {
     next()
-   })
- } else {
-  next()
- }
+  }
 }
 
 /* ****************************************
@@ -156,5 +156,22 @@ Util.buildClassificationList = async function (classification_id = null) {
     return res.redirect("/account/login")
   }
  }
+
+ /* ****************************************
+* Restrict access to Employee/Admin accounts
+**************************************** */
+Util.checkEmployeeAdmin = (req, res, next) => {
+  // Must be logged in
+  if (res.locals.loggedin && res.locals.accountData) {
+    const accountType = res.locals.accountData.account_type
+    if (accountType === 'Employee' || accountType === 'Admin') {
+      return next()
+    }
+  }
+  
+  // If not authorized, redirect to login with message
+  req.flash("notice", "You must be an Employee or Admin to access that page.")
+  return res.redirect("/account/login")
+}
 
 module.exports = Util

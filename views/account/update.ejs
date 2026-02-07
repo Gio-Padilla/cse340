@@ -1,0 +1,63 @@
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } %>
+
+<%- messages() %>
+
+<% if (errors) { %>
+  <ul class="notice">
+ <% errors.array().forEach(error => { %>
+   <li><%= error.msg %></li>
+<%  }) %>
+ </ul>
+<% } %>
+
+<!-- =========================
+     Account Update Form
+     ========================= -->
+<div class="my-form">
+  <h2>Account Update</h2>
+  <form id="account-update" method="POST" action="/account/update/<%= accountData.account_id %>">
+    <div>
+      <label for="account_firstname">First Name:<br>
+        <input type="text" name="account_firstname" required 
+               value="<%= accountData.account_firstname || '' %>">
+      </label>
+    </div>
+    <div>
+      <label for="account_lastname">Last Name:<br>
+        <input type="text" name="account_lastname" required 
+               value="<%= accountData.account_lastname || '' %>">
+      </label>
+    </div>
+    <div>
+      <label for="account_email">Email:<br>
+        <input type="email" name="account_email" required 
+               value="<%= accountData.account_email || '' %>">
+      </label>
+    </div>
+    <button type="submit">Update Account</button>
+  </form>
+</div>
+
+<!-- =========================
+     Change Password Form
+     ========================= -->
+<div class="my-form top1rem">
+  <h2>Change Password</h2>
+  <form id="change-password" method="POST" action="/account/update-password/<%= accountData.account_id %>">
+    <div>
+      <label for="account_password">New Password:<br>
+        <input type="password"  name="account_password" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$">
+      </label>
+    </div>
+    <div>Password Requirements:</div>
+    <ul id="password-rules" class="password-hint">
+      <li>At least 12 characters</li>
+      <li>At least 1 capital letter</li>
+      <li>At least 1 number</li>
+      <li>At least 1 special character</li>
+    </ul>
+    <button type="submit">Update Password</button>
+  </form>
+</div>

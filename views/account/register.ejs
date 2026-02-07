@@ -19,8 +19,7 @@
         <div><label>First Name:<br><input type="text" name="account_firstname" required value="<%= locals.account_firstname %>" /></label></div>
         <div><label>Last Name:<br><input type="text" name="account_lastname" required value="<%= locals.account_lastname %>" /></label></div>
 		<div><label>Email:<br><input type="email" name="account_email" required value="<%= locals.account_email %>" /></label></div>
-		<div><label>Password: <br><input type="password" name="account_password" required aria-describedby="password-rules" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
-/></label></div>
+		<div><label>Password: <br><input type="password" name="account_password" required aria-describedby="password-rules" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"/></label></div>
         <div>Password Requirements</div>
         <ul id="password-rules" class="password-hint" >
             <li>At least 12 characters</li>
