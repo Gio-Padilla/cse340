@@ -1,4 +1,5 @@
 const invModel = require("../models/inventory-model")
+const favoriteModel = require("../models/favorite-model")
 const utilities = require("../utilities/")
 
 const invCont = {}
@@ -10,46 +11,64 @@ invCont.buildByClassificationId = async function (req, res, next) {
   const classification_id = req.params.classificationId
   const data = await invModel.getInventoryByClassificationId(classification_id)
   const grid = await utilities.buildClassificationGrid(data)
-  let nav = await utilities.getNav()
   const className = data.length ? data[0].classification_name : "Vehicles"
   res.render("inventory/classification", {
     title: className + " vehicles",
-    nav,
     grid,
     errors: null,
   })
 }
+/* ***************************
+ * Build inventory grid by user favorites
+ * ************************** */
+invCont.buildByFavorites = async function (req, res, next) {
+  try {
+    const account_id = res.locals.accountData.account_id;
+    const data = await favoriteModel.getUsersFavorites(account_id);
+    const grid = await utilities.buildClassificationGrid(data);
+    const title = data.length ? "My Favorite Vehicles" : "No Favorites Yet";
+    res.render("inventory/classification", {
+      title,
+      grid,
+      errors: null,
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+};
 
 /* ***************************
  *  Build Listing by ID view
  * ************************** */
 invCont.buildByItemID = async function (req, res, next) {
-  const itemID = req.params.itemId  // matches :itemId in the route
+  const itemID = req.params.itemId
   const data = await invModel.getInventoryByInvId(itemID)
   const item = data[0]
-  const listing = await utilities.buildListingHTML(itemID)
-  const nav = await utilities.getNav()
+
+  const listing = await utilities.buildListingHTML(
+    itemID,
+    res.locals.accountData   // <-- pass account data
+  )
+
   const title = `${item.inv_year} ${item.inv_make} ${item.inv_model}`
+
   res.render("inventory/listing", {
     title,
-    nav,
     listing,
     errors: null,
   })
 }
-
 /* ***************************
  *  Build Vehicle Management Links
  * ************************** */
 invCont.buildInvOptions = async function (req, res, next) {
-  const nav = await utilities.getNav()
   const title = "Vehicle Management"
 
   const classificatoinSelect = await utilities.buildClassificationList()
 
   res.render("inventory/management", {
     title,
-    nav,
     classificatoinSelect: classificatoinSelect,
     errors: null,
   })
@@ -59,11 +78,9 @@ invCont.buildInvOptions = async function (req, res, next) {
  *  Build Add Classification
  * ************************** */
 invCont.buildAddClassification = async function (req, res, next) {
-  const nav = await utilities.getNav()
   const title = "Add New Classification"
   res.render("inventory/add-classification", {
     title,
-    nav,
     errors: null,
     classification_name: "",
   })
@@ -75,14 +92,12 @@ invCont.buildAddClassification = async function (req, res, next) {
  * ************************** */
 invCont.buildAddInventory = async function (req, res, next) {
   try {
-    const nav = await utilities.getNav();
     const title = "Add New Inventory";
 
     const classificationsOptions = await utilities.buildClassificationList()
 
     res.render("inventory/add-inventory", {
       title,
-      nav,
       errors: null,
       classificationList: classificationsOptions,
       // Add default empty values for all form fields
@@ -107,12 +122,10 @@ invCont.buildAddInventory = async function (req, res, next) {
  *  Helper: Render Add Inventory Form
  * ************************** */
 async function renderAddInventoryForm(res, data = {}, errors = null) {
-  const nav = await utilities.getNav();
   const classificationsOptions = await utilities.buildClassificationList()
 
   return res.render("inventory/add-inventory", {
     title: "Add New Inventory",
-    nav,
     classificationList: classificationsOptions,
     errors,
     classification_id: data.classification_id || "",
@@ -186,14 +199,12 @@ invCont.addVehicle = async function (req, res, next) {
 invCont.addClassification = async function (req, res, next) {
   const errors = require("express-validator").validationResult(req);
 
-  const nav = await utilities.getNav();
   const classification_name = req.body.classification_name;
 
   // Validation errors
   if (!errors.isEmpty()) {
     return res.status(400).render("inventory/add-classification", {
       title: "Add New Classification",
-      nav,
       errors: errors.array(),
       classification_name,
     });
@@ -206,7 +217,6 @@ invCont.addClassification = async function (req, res, next) {
       req.flash("notice", "Classification could not be added.");
       return res.render("inventory/add-classification", {
         title: "Add New Classification",
-        nav,
         errors: null,
         classification_name,
       });
@@ -239,7 +249,6 @@ invCont.getInventoryJSON = async (req, res, next) => {
 invCont.buildEditInventory = async function (req, res, next) {
   try {
     const inventoryId = parseInt(req.params.itemId)
-    const nav = await utilities.getNav();
     const inventoryData = (await invModel.getInventoryByInvId(inventoryId))[0]
     // console.log(inventoryData) // Used as a test
     const classificationSelect = await utilities.buildClassificationList(inventoryData.classification_id)
@@ -248,7 +257,6 @@ invCont.buildEditInventory = async function (req, res, next) {
 
     res.render("inventory/edit-inventory", {
       title: "Edit " + itemName,
-      nav,
       classificationList: classificationSelect,
       errors: null,
       inv_id: inventoryData.inv_id,
@@ -273,7 +281,6 @@ invCont.buildEditInventory = async function (req, res, next) {
  *  Update Inventory Data
  * ************************** */
 invCont.updateInventory = async function (req, res, next) {
-  let nav = await utilities.getNav()
   const {
     inv_id,
     inv_make,
@@ -311,7 +318,6 @@ invCont.updateInventory = async function (req, res, next) {
     req.flash("notice", "Sorry, the insert failed.")
     res.status(501).render("inventory/edit-inventory", {
     title: "Edit " + itemName,
-    nav,
     classificationList: classificationSelect,
     errors: null,
     inv_id,
@@ -334,12 +340,10 @@ invCont.updateInventory = async function (req, res, next) {
  * ************************** */
 invCont.buildDeleteInventory = async function (req, res, next) {
   const inventoryId = parseInt(req.params.itemId)
-  const nav = await utilities.getNav();
   const inventoryData = (await invModel.getInventoryByInvId(inventoryId))[0]
   const itemName = `${inventoryData.inv_make} ${inventoryData.inv_model}`
   res.render("inventory/delete-confirm", {
     title: "Delete " + itemName,
-    nav,
     errors: null,
     inv_id: inventoryData.inv_id,
     inv_make: inventoryData.inv_make,
@@ -362,13 +366,11 @@ invCont.confirmDeleteInventory = async function (req, res, next) {
     req.flash("notice", `The ${itemName} was successfully deleted.`)
     return res.redirect("/inv/")
   } else {
-    const nav = await utilities.getNav()
     const itemName = `${inv_make} ${inv_model}`
 
     req.flash("notice", "Sorry, the deletion failed.")
     return res.status(501).render("inventory/delete-confirm", {
       title: "Delete " + itemName,
-      nav,
       errors: null,
       inv_id,
       inv_make,
@@ -378,4 +380,26 @@ invCont.confirmDeleteInventory = async function (req, res, next) {
     })
   }
 }
+
+/* ***************************
+ * Toggle favorite
+ * ************************** */
+invCont.toggleFavorite = async function (req, res, next) {
+  const inv_id = req.params.invId;
+  const account_id = res.locals.accountData.account_id;
+
+  const exists = await favoriteModel.isFavorite(account_id, inv_id);
+
+  if (exists) {
+    await favoriteModel.removeFavorite(account_id, inv_id);
+    req.flash("notice", "Removed from favorites.");
+  } else {
+    await favoriteModel.addFavorite(account_id, inv_id);
+    req.flash("notice", "Added to favorites.");
+  }
+
+  // return to vehicle page
+  res.redirect(`/inv/detail/${inv_id}`);
+};
+
 module.exports = invCont

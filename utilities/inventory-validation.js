@@ -122,11 +122,9 @@ validate.checkClassificationData = async (req, res, next) => {
   let errors = []
   errors = validationResult(req)
   if (!errors.isEmpty()) {
-    let nav = await utilities.getNav()
     res.render("inventory/add-classification", {
       errors,
       title: "Add New Classification",
-      nav,
       classification_name,
     })
     return
@@ -155,14 +153,11 @@ validate.checkInventoryData = async (req, res, next) => {
 
   if (!errors.isEmpty()) {
     try {
-      // Get navigation and classifications for the form
-      const nav = await utilities.getNav();
       const classificationsOptions = await utilities.buildClassificationList()
 
       res.render("inventory/add-inventory", {
         errors: errors.array(),
         title: "Add New Inventory",
-        nav,
         classificationList: classificationsOptions,  // Pass classifications for dropdown
         // Re-populate all form fields
         classification_id,
@@ -208,15 +203,12 @@ validate.checkUpdateData = async (req, res, next) => {
 
   if (!errors.isEmpty()) {
     try {
-      // Get navigation and classifications for the form
-      const nav = await utilities.getNav();
       const classificationsOptions = await utilities.buildClassificationList(classification_id)
       const title = `Edit ${inv_make} ${inv_model}`;
 
       res.render("inventory/edit-inventory", {
         errors: errors.array(),
         title,
-        nav,
         classificationList: classificationsOptions,  // Pass classifications for dropdown
         // Re-populate all form fields
         inv_id,

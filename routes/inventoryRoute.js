@@ -8,27 +8,34 @@ const utilities = require("../utilities/")
 // Route to build inventory by classification view
 router.get(
   "/type/:classificationId",
-  inventoryController.buildByClassificationId
+  utilities.handleErrors(inventoryController.buildByClassificationId)
+);
+
+// Route to build favorites view
+router.get(
+  "/my-favorites",
+  utilities.checkLogin,
+  utilities.handleErrors(inventoryController.buildByFavorites)
 );
 
 // Route to build inventory by Item view
 router.get(
   "/detail/:itemId",
-  inventoryController.buildByItemID
+  utilities.handleErrors(inventoryController.buildByItemID)
 );
 
 // Route to Inventory Management
 router.get(
   "/",
   utilities.checkEmployeeAdmin,
-  inventoryController.buildInvOptions
+  utilities.handleErrors(inventoryController.buildInvOptions)
 );
 
 // Route to add classification
 router.get(
   "/add-classification",
   utilities.checkEmployeeAdmin,
-  inventoryController.buildAddClassification
+  utilities.handleErrors(inventoryController.buildAddClassification)
 );
 // Process the add classification
 router.post(
@@ -43,7 +50,7 @@ router.post(
 router.get(
   "/add-inventory",
   utilities.checkEmployeeAdmin,
-  inventoryController.buildAddInventory
+  utilities.handleErrors(inventoryController.buildAddInventory)
 );
 // Process the add inventory
 router.post(
@@ -74,7 +81,7 @@ router.post(
   utilities.checkEmployeeAdmin,
   inventoryValidate.vehicleRules(),
   inventoryValidate.checkUpdateData,
-  inventoryController.updateInventory
+  utilities.handleErrors(inventoryController.updateInventory)
 );
 
 // Route to build delete view
@@ -89,6 +96,12 @@ router.post(
   "/delete/:itemId",
   utilities.checkEmployeeAdmin,
   utilities.handleErrors(inventoryController.confirmDeleteInventory)
+);
+
+router.get(
+  "/favorite/:invId",
+  utilities.checkLogin,
+  utilities.handleErrors(inventoryController.toggleFavorite)
 );
 
 module.exports = router;

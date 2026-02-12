@@ -48,6 +48,18 @@ app.use(cookieParser())
 
 app.use(utilities.checkJWTToken)
 
+// Middleware to build nav for every request
+app.use(async (req, res, next) => {
+  try {
+    const loggedIn = !!res.locals.accountData;
+    res.locals.nav = await utilities.getNav(loggedIn);
+    next();
+  } catch (error) {
+    console.error("Error building nav:", error);
+    next(error);
+  }
+});
+
 /* ***********************
  * View Engine and Templates
  *************************/

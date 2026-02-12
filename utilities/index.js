@@ -1,4 +1,5 @@
 const invModel = require("../models/inventory-model")
+const favoriteModel = require("../models/favorite-model")
 const Util = {}
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
@@ -6,27 +7,27 @@ require("dotenv").config()
 /* ************************
  * Constructs the nav HTML unordered list
  ************************** */
-Util.getNav = async function (req, res, next) {
-  let data = await invModel.getClassifications()
-  // console.log(data) // Displays the data that was returned.
-  let list = "<ul>"
-  list += '<li><a href="/" title="Home page">Home</a></li>'
+Util.getNav = async function (loggedIn = false) {
+  // Fetch all classifications from the database
+  let data = await invModel.getClassifications();
+  let list = "<ul>";
+  list += '<li><a href="/" title="Home page">Home</a></li>';
+  // Add Favorites link only if user is logged in
+  if (loggedIn) {
+    list += '<li><a href="/inv/my-favorites" title="Favorites Page">My Favorites</a></li>';
+  }
+  // Add links for all vehicle classifications
   data.rows.forEach((row) => {
-    list += "<li>"
-    list +=
-      '<a href="/inv/type/' +
-      row.classification_id +
-      '" title="See our inventory of ' +
-      row.classification_name +
-      ' vehicles">' +
-      row.classification_name +
-      "</a>"
-    list += "</li>"
-  })
-  list += "</ul>"
-  return list
-}
+    list += `<li><a href="/inv/type/${row.classification_id}" title="See our inventory of ${row.classification_name} vehicles">${row.classification_name}</a></li>`;
+  });
+  list += "</ul>";
+  // Return the built nav HTML
+  return list;
+};
 
+/* ************************
+ * Constructs the grid based off of the provided list of vehicles
+ ************************** */
 Util.buildClassificationGrid = async function(data){
   let grid = ""
 
@@ -63,21 +64,44 @@ Util.buildClassificationGrid = async function(data){
   return grid
 }
 
-
 /* **************************************
-* Build Listing View HTML
+* Build Listing View HTML with Favorites
 * ************************************ */
-Util.buildListingHTML = async function(itemID) {
+Util.buildListingHTML = async function(itemID, accountData = null) {
   let theData = await invModel.getInventoryByInvId(itemID)
   theData = theData[0]
   theData.inv_price = Number(theData.inv_price).toLocaleString()
   theData.inv_miles = Number(theData.inv_miles).toLocaleString()
-  // console.log(theData) // Testing to see how the data gets returned
+
+  // Default favorite link
+  let favoriteHTML = ''
+  let favoriteNote = ''
+
+  if (accountData) {
+    // User is logged in, check if this item is already in their favorites
+    const isFavorite = await favoriteModel.isFavorite(accountData.account_id, itemID)
+
+    if (isFavorite) {
+      // Already a favorite → show remove link
+      favoriteHTML = ` - <a href="/inv/favorite/${itemID}" title="Remove from favorites" class='heart'>♥︎</a>`
+      favoriteNote = '<p><u>Click the heart to remove from favorites list.</u></p>'
+    } else {
+      // Not a favorite → show add link
+      favoriteHTML = ` - <a href="/inv/favorite/${itemID}" title="Add to favorites" class='heart'>♡</a>`
+      favoriteNote = '<p><u>Click the heart to add to favorites list.</u></p>'
+    }
+  } else {
+    // User not logged in → optionally no link or disabled link
+    favoriteHTML = ''
+    favoriteNote = ''
+  }
+
   let theHTML = `
     <div class="listing-page">
       <img src="${theData.inv_image}" alt="${theData.inv_year} ${theData.inv_make} ${theData.inv_model}">
       <div>
-        <h2>${theData.inv_make} ${theData.inv_model} Details</h2>
+        <h2>${theData.inv_make} ${theData.inv_model} Details${favoriteHTML}</h2>
+        ${favoriteNote}
         <p><b>Price: </b>$${theData.inv_price}</p>
         <p><b>Description: </b>${theData.inv_description}</p>
         <p><b>Color: </b>${theData.inv_color}</p>
@@ -85,7 +109,6 @@ Util.buildListingHTML = async function(itemID) {
       </div>
     </div>
   `
-  // console.log(theHTML) // Testing to see if the HTML looks good
   return theHTML
 }
 

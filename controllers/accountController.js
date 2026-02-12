@@ -8,10 +8,8 @@ require("dotenv").config()
 *  Deliver login view
 * *************************************** */
 async function buildLogin(req, res, next) {
-  let nav = await utilities.getNav()
   res.render("account/login", {
     title: "Login",
-    nav,
     errors: null,
   })
 }
@@ -20,10 +18,8 @@ async function buildLogin(req, res, next) {
 *  Deliver registration view
 * *************************************** */
 async function buildRegister(req, res, next) {
-  let nav = await utilities.getNav()
   res.render("account/register", {
     title: "Register",
-    nav,
     errors: null,
   })
 }
@@ -33,11 +29,9 @@ async function buildRegister(req, res, next) {
 *  Deliver account view
 * *************************************** */
 async function buildAccountView(req, res, next) {
-  let nav = await utilities.getNav()
   const accountData = res.locals.accountData;
   res.render("account/index", {
     title: "Account",
-    nav,
     errors: null,
     accountData,
   })
@@ -47,11 +41,9 @@ async function buildAccountView(req, res, next) {
 *  Deliver account update view
 * *************************************** */
 async function buildAccountUpdate(req, res, next) {
-  let nav = await utilities.getNav()
   const accountData = res.locals.accountData;
   res.render("account/update", {
     title: "Update Account",
-    nav,
     errors: null,
     accountData,
   })
@@ -61,7 +53,6 @@ async function buildAccountUpdate(req, res, next) {
 *  Process Registration
 * *************************************** */
 async function registerAccount(req, res) {
-  let nav = await utilities.getNav()
   const { account_firstname, account_lastname, account_email, account_password } = req.body
 
   // Hash the password before storing
@@ -73,7 +64,6 @@ async function registerAccount(req, res) {
     req.flash("notice", 'Sorry, there was an error processing the registration.')
     res.status(500).render("account/register", {
       title: "Registration",
-      nav,
       errors: null,
     })
   }
@@ -92,14 +82,12 @@ async function registerAccount(req, res) {
     )
     res.status(201).render("account/login", {
       title: "Login",
-      nav,
       errors: null,
     })
   } else {
     req.flash("notice", "Sorry, the registration failed.")
     res.status(501).render("account/register", {
       title: "Registration",
-      nav,
       errors: null,
     })
   }
@@ -109,14 +97,12 @@ async function registerAccount(req, res) {
  *  Process login request
  * ************************************ */
 async function accountLogin(req, res) {
-  let nav = await utilities.getNav()
   const { account_email, account_password } = req.body
   const accountData = await accountModel.getAccountByEmail(account_email)
   if (!accountData) {
     req.flash("notice", "Please check your credentials and try again.")
     res.status(400).render("account/login", {
       title: "Login",
-      nav,
       errors: null,
       account_email,
     })
@@ -137,7 +123,6 @@ async function accountLogin(req, res) {
       req.flash("message notice", "Please check your credentials and try again.")
       res.status(400).render("account/login", {
         title: "Login",
-        nav,
         errors: null,
         account_email,
       })
@@ -151,7 +136,6 @@ async function accountLogin(req, res) {
 *  Process Account Info Update
 * *************************************** */
 async function updateAccountData(req, res, next) {
-  let nav = await utilities.getNav()
   const { account_firstname, account_lastname, account_email } = req.body
   const account_id = res.locals.accountData.account_id
 
@@ -175,7 +159,6 @@ async function updateAccountData(req, res, next) {
       req.flash("notice", "Account update failed.")
       return res.status(500).render("account/update", {
         title: "Update Account",
-        nav,
         errors: null,
         accountData: res.locals.accountData,
       })
@@ -189,7 +172,6 @@ async function updateAccountData(req, res, next) {
 *  Process Account Password Update
 * *************************************** */
 async function updateAccountPassword(req, res, next) {
-  let nav = await utilities.getNav()
   const { account_password } = req.body
   const account_id = res.locals.accountData.account_id
 
@@ -206,7 +188,6 @@ async function updateAccountPassword(req, res, next) {
       req.flash("notice", "Password update failed.")
       return res.status(500).render("account/update", {
         title: "Update Password",
-        nav,
         errors: null,
         accountData: res.locals.accountData,
       })
